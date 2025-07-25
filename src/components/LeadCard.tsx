@@ -35,9 +35,10 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
     setError(null);
     
     try {
-      const result = await fetchTelegramUsername(lead.userid) as unknown as {username: string}[];
+      const result = await fetchTelegramUsername(lead.userid) as unknown as {username: string, message: string}[];
       if (result[0].username) {
-        window.open(`https://t.me/${result[0].username}`, '_blank');
+        let message = result[0].message || "Hello, I am from Slice SFB";
+        window.open(`https://t.me/${result[0].username}?text=${message}`, '_blank');
       } else {
         setError('No Telegram username found for this lead');
       }
