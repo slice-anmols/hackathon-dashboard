@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Lead } from '../types/Lead';
+import { fetchTelegramUsername } from '../services/leadService';
 
 interface LeadCardProps {
   lead: Lead;
 }
 
 const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
       case 'high':
@@ -24,6 +28,25 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
     if (score >= 60) return 'text-yellow-600';
     if (score >= 40) return 'text-orange-600';
     return 'text-red-600';
+  };
+
+  const handleChatClick = async () => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      const result = await fetchTelegramUsername(lead.userid);
+      if (result.username) {
+        window.open(`https://t.me/${result.username}`, '_blank');
+      } else {
+        setError('No Telegram username found for this lead');
+      }
+    } catch (err) {
+      setError('Failed to fetch Telegram username. Please try again.');
+      console.error('Error fetching Telegram username:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -81,6 +104,39 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
       <div className="mb-4">
         <h4 className="mb-2 font-medium text-gray-700">Summary</h4>
         <p className="text-sm text-gray-900">{lead.shortSummary || 'No summary available'}</p>
+      </div>
+
+      {/* Chat Button */}
+      <div className="mb-4">
+        <button
+          onClick={handleChatClick}
+          disabled={isLoading}
+          className={`w-full flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
+            isLoading
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+          }`}
+        >
+          {isLoading ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Loading...
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd"></path>
+              </svg>
+              Chat with Lead
+            </>
+          )}
+        </button>
+        {error && (
+          <p className="mt-2 text-sm text-red-600 text-center">{error}</p>
+        )}
       </div>
 
       {/* Lead Inference - Highlight Section */}
