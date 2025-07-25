@@ -27,7 +27,7 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md border border-gray-200 p-6 hover:shadow-lg transition-shadow duration-200">
+    <div className="p-6 bg-white rounded-lg border border-gray-200 shadow-md transition-shadow duration-200 hover:shadow-lg">
       {/* Header */}
       <div className="flex justify-between items-start mb-4">
         <div>
@@ -69,7 +69,7 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
 
       {/* Loan Details */}
       <div className="mb-4">
-        <h4 className="font-medium text-gray-700 mb-2">Loan Details</h4>
+        <h4 className="mb-2 font-medium text-gray-700">Loan Details</h4>
         <div className="space-y-1 text-sm">
           <p><span className="font-medium">Reason:</span> {lead.reasonForLoan || 'N/A'}</p>
           <p><span className="font-medium">Duration:</span> {lead.durationOfLoan || 'N/A'}</p>
@@ -79,14 +79,14 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
 
       {/* Summary */}
       <div className="mb-4">
-        <h4 className="font-medium text-gray-700 mb-2">Summary</h4>
+        <h4 className="mb-2 font-medium text-gray-700">Summary</h4>
         <p className="text-sm text-gray-900">{lead.shortSummary || 'No summary available'}</p>
       </div>
 
       {/* Lead Inference - Highlight Section */}
       {lead.leadInference ? (
-        <div className="border-t pt-4">
-          <h4 className="font-semibold text-gray-900 mb-3">Lead Analysis</h4>
+        <div className="pt-4 border-t">
+          <h4 className="mb-3 font-semibold text-gray-900">Lead Analysis</h4>
           
           {/* Lead Score */}
           <div className="mb-3">
@@ -96,9 +96,9 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
                 {lead.leadInference.leadScore}/{lead.leadInference.totalPossibleScore}
               </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+            <div className="mt-1 w-full h-2 bg-gray-200 rounded-full">
               <div 
-                className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                className="h-2 bg-blue-600 rounded-full transition-all duration-300"
                 style={{ width: `${(lead.leadInference.leadScore / lead.leadInference.totalPossibleScore) * 100}%` }}
               ></div>
             </div>
@@ -123,7 +123,7 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
           </div>
 
           {/* Score Breakdown */}
-          <div>
+          {/* <div>
             <span className="text-sm font-medium text-gray-700">Score Breakdown:</span>
             <div className="grid grid-cols-2 gap-2 mt-2 text-xs">
               {Object.entries(lead.leadInference.scoreBreakdown).map(([key, value]) => (
@@ -133,7 +133,7 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Processed At */}
           <div className="mt-3 text-xs text-gray-500">
@@ -141,9 +141,9 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
           </div>
         </div>
       ) : (
-        <div className="border-t pt-4">
-          <div className="text-center py-4">
-            <p className="text-gray-500 text-sm">No lead analysis available</p>
+        <div className="pt-4 border-t">
+          <div className="py-4 text-center">
+            <p className="text-sm text-gray-500">No lead analysis available</p>
           </div>
         </div>
       )}
