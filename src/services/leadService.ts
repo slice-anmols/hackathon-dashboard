@@ -25,7 +25,7 @@ export const fetchTelegramUsername = async (userId: string): Promise<{ username:
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ userId }),
+      body: JSON.stringify({ chatId: userId }),
     });
     
     if (!response.ok) {

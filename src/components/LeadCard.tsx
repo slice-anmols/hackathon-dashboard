@@ -35,9 +35,9 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
     setError(null);
     
     try {
-      const result = await fetchTelegramUsername(lead.userid);
-      if (result.username) {
-        window.open(`https://t.me/${result.username}`, '_blank');
+      const result = await fetchTelegramUsername(lead.userid) as unknown as {username: string}[];
+      if (result[0].username) {
+        window.open(`https://t.me/${result[0].username}`, '_blank');
       } else {
         setError('No Telegram username found for this lead');
       }
@@ -113,13 +113,13 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
           disabled={isLoading}
           className={`w-full flex items-center justify-center px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ${
             isLoading
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+              ? 'text-gray-500 bg-gray-300 cursor-not-allowed'
+              : 'text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
           }`}
         >
           {isLoading ? (
             <>
-              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <svg className="mr-2 -ml-1 w-4 h-4 text-gray-500 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
@@ -127,7 +127,7 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
             </>
           ) : (
             <>
-              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <svg className="mr-2 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd"></path>
               </svg>
               Chat with Lead
@@ -135,7 +135,7 @@ const LeadCard: React.FC<LeadCardProps> = ({ lead }) => {
           )}
         </button>
         {error && (
-          <p className="mt-2 text-sm text-red-600 text-center">{error}</p>
+          <p className="mt-2 text-sm text-center text-red-600">{error}</p>
         )}
       </div>
 
